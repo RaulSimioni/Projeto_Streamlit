@@ -1,9 +1,7 @@
 import pandas as pd
 import seaborn as sns
-import matplotlib as plot
+import matplotlib.pyplot as plt
 
-#1. Calcule a média, mediana, moda, variância, amplitude e desvio padrão das notas de
-#matemática, português e ciências.
 
 def classificar_nota(nota):
     if nota < 3.0:
@@ -14,7 +12,9 @@ def classificar_nota(nota):
         return 'Aprovado'
 
 
+# Leitura do dataset
 data_frame = pd.read_csv('dados_alunos_escola.csv', delimiter=',', encoding='utf-8')
+
 
 estatisticas = {
     "Média": data_frame[['nota_matematica', 'nota_portugues', 'nota_ciencias']].mean(),
@@ -25,30 +25,38 @@ estatisticas = {
     "Desvio Padrão": data_frame[['nota_matematica', 'nota_portugues', 'nota_ciencias']].std(),
 }
 
-
-#2. Qual é a frequência média dos alunos por série?
-
+# Frequência média por série
 frequencia = data_frame.groupby('serie')['frequencia_%'].mean()
-#print(round(frequencia, 2))
 
-#3. Filtre os alunos com frequência abaixo de 75% e calcule a média geral deles.
-
-frequencia_75 = data_frame[data_frame['frequencia_%'] < 75]
+# Média de alunos com frequência abaixo de 75%
+frequencia_75 = data_frame[data_frame['frequencia_%'] < 75].copy()
 frequencia_75['Nota_Media'] = round(frequencia_75[['nota_portugues', 'nota_matematica', 'nota_ciencias']].mean(axis=1), 1)
-#print(frequencia_75)
 
-#4. Use groupby para obter a nota média por cidade e matéria.
-
+# Nota média por cidade e disciplina
 nota_media_por_cidade = data_frame.groupby('cidade')[['nota_matematica', 'nota_portugues', 'nota_ciencias']].mean()
 
-# 5. Crie a seguinte classificação:
-#a. Nota menor que 3,0 = reprovado
-#b. Nota menor que 6,0 = exame
-#c. Nota acima de 6,0 = aprovado
+# Cálculo da nota média geral e classificação
+data_frame['Nota_Media'] = round(data_frame[['nota_portugues', 'nota_matematica', 'nota_ciencias']].mean(axis=1), 1)
+data_frame['Classificacao'] = data_frame['Nota_Media'].apply(classificar_nota)
 
-data_frame['Classificação'] = frequencia_75['Nota_Media'].apply(classificar_nota)
-print(data_frame)
+# Contagens de alunos por faixas de nota
+media_menor_3 = data_frame[data_frame['Nota_Media'] < 3.0]
+media_menor_5 = data_frame[data_frame['Nota_Media'] < 5.0]
+media_menor_7 = data_frame[data_frame['Nota_Media'] < 7.0]
+media_menor_9 = data_frame[data_frame['Nota_Media'] < 9.0]
+media_10 = data_frame[data_frame['Nota_Media'] == 10.0]
 
-# 6. Quantos alunos possuem a nota menor que 3,0?
+# Melhor e pior nota média por cidade
+melhor_nota_cidade = data_frame.groupby('cidade')['Nota_Media'].max()
+pior_nota_cidade = data_frame.groupby('cidade')['Nota_Media'].min()
 
-data_frame['Nota_Media'] = round(data_frame[['nota_portugues', 'nota_matematica', 'nota_ciencias']])
+# Histogramas das notas
+colunas_notas = ["nota_matematica", "nota_portugues", "nota_ciencias"]
+
+for coluna in colunas_notas:
+    fig, ax = plt.subplots()
+    ax.hist(data_frame[coluna], bins=10, color='skyblue', edgecolor='black')
+    ax.set_title(f"Histograma de {coluna}")
+    ax.set_xlabel("Notas")
+    ax.set_ylabel("Frequência")
+    plt.show()
