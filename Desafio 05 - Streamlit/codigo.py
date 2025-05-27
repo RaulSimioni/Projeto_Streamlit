@@ -49,4 +49,6 @@ nota_media_por_cidade = data_frame.groupby('cidade')[['nota_matematica', 'nota_p
 data_frame['Classificação'] = frequencia_75['Nota_Media'].apply(classificar_nota)
 print(data_frame)
 
-# Exibir os resultados
+# 6. Quantos alunos possuem a nota menor que 3,0?
+
+data_frame['Nota_Media'] = round(data_frame[['nota_portugues', 'nota_matematica', 'nota_ciencias']])

@@ -11,5 +11,3 @@ for key, value in codigo.estatisticas.items():
 st.subheader("Frequência Média por Série")
 frequencia_media = codigo.data_frame.groupby('serie')['frequencia_%'].mean()
 st.write(round(frequencia_media, 2))
-
-
