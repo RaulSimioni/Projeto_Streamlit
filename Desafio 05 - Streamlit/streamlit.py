@@ -6,7 +6,6 @@ import seaborn as sns
 st.set_page_config(page_title="Dashboard Escolar", layout="wide")
 st.title("📚 Dashboard de Análise de Notas dos Alunos")
 
-# Estatísticas sempre visíveis com layout compacto
 st.subheader("📊 Estatísticas Gerais das Notas")
 col1, col2, col3 = st.columns(3)
 with col1:
@@ -37,11 +36,11 @@ with col5:
 st.markdown("---")
 st.subheader("🔍 Alunos por Faixa de Nota Média")
 col6, col7, col8, col9, col10 = st.columns(5)
-col6.metric("< 3.0", len(codigo.media_menor_3))
-col7.metric("< 5.0", len(codigo.media_menor_5))
-col8.metric("< 7.0", len(codigo.media_menor_7))
-col9.metric("< 9.0", len(codigo.media_menor_9))
-col10.metric("= 10", len(codigo.media_10))
+col6.metric("Notas menores que 3.0", len(codigo.media_menor_3))
+col7.metric("Notas menores que 5.0", len(codigo.media_menor_5))
+col8.metric("Notas menores que 7.0", len(codigo.media_menor_7))
+col9.metric("Notas menores que 9.0", len(codigo.media_menor_9))
+col10.metric("Notas 10", len(codigo.media_10))
 
 st.markdown("---")
 st.subheader("📊 Histogramas de Notas por Disciplina")
@@ -58,11 +57,68 @@ for coluna, container in zip(["nota_matematica", "nota_portugues", "nota_ciencia
         st.pyplot(fig)
 
 st.markdown("---")
-st.subheader("📦 Boxplot - Notas de Português por Série")
+st.subheader("📦 Boxplot - Notas de matérias por Série")
+
+col1, col2, col3 = st.columns([1, 1, 1])
+
 fig, ax = plt.subplots(figsize=(6, 4))
-sns.boxplot(data=codigo.data_frame, x='serie', y='nota_portugues', ax=ax)
+sns.boxplot(data=codigo.data_frame, x='serie', y='nota_portugues', ax=ax, color='green')
 ax.set_title("Notas de Português por Série", fontsize=11)
 ax.set_xlabel("Série", fontsize=9)
 ax.set_ylabel("Nota de Português", fontsize=9)
 ax.tick_params(axis='both', labelsize=8)
-st.pyplot(fig)
+
+fig2, ax2 = plt.subplots(figsize=(6, 4))
+sns.boxplot(data=codigo.data_frame, x='serie', y='nota_matematica', ax=ax2, color='blue')
+ax2.set_title("Notas de Matematica por Série", fontsize=11)
+ax2.set_xlabel("Série", fontsize=9)
+ax2.set_ylabel("Nota de Matematica", fontsize=9)
+ax2.tick_params(axis='both', labelsize=8)
+
+fig3, ax3 = plt.subplots(figsize=(6, 4))
+sns.boxplot(data=codigo.data_frame, x='serie', y='nota_ciencias', ax=ax3, color='purple')
+ax3.set_title("Notas de Ciencias por Série", fontsize=11)
+ax3.set_xlabel("Série", fontsize=9)
+ax3.set_ylabel("Nota de Ciencias", fontsize=9)
+ax3.tick_params(axis='both', labelsize=8)
+
+
+with col1:
+    st.pyplot(fig)
+with col2:
+    st.pyplot(fig2)
+with col3:
+    st.pyplot(fig3)
+
+
+st.subheader("📊 Gráfico de barra - Qunatidade de alunos por cidade")
+fig4, ax4 = plt.subplots(figsize=(8, 5))
+sns.barplot(x=codigo.quant_alunos_por_cidade.index, y=codigo.quant_alunos_por_cidade.values, ax=ax4, palette="viridis")
+ax4.set_title("Quantidade de Alunos por Cidade", fontsize=12)
+ax4.set_xlabel("Cidade", fontsize=10)
+ax4.set_ylabel("Número de Alunos", fontsize=10)
+ax4.tick_params(axis='x', rotation=45, labelsize=9)
+
+col1, col_central, col3 = st.columns([1, 2, 1])
+
+with col_central:
+    st.pyplot(fig4)
+
+
+st.subheader("📊 Gráfico de barra - Dispersão Frequencia x Nota por Matéria")
+fig5, ax5 = plt.subplots()
+sns.scatterplot(data=codigo.data_frame, x="frequencia_%", y="Nota_Media", hue="Nota_Media", ax=ax5)
+ax5.set_title("Dispersão: Frequência vs Nota por Matéria")
+ax5.set_xlabel("Frequência (%)")
+ax5.set_ylabel("Nota")
+
+col1, col_central, col3 = st.columns([1, 2, 1])
+
+with col_central:
+    st.pyplot(fig5)
+
+
+
+
+
+

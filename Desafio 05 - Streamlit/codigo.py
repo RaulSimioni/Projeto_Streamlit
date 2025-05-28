@@ -50,6 +50,8 @@ media_10 = data_frame[data_frame['Nota_Media'] == 10.0]
 melhor_nota_cidade = data_frame.groupby('cidade')['Nota_Media'].max()
 pior_nota_cidade = data_frame.groupby('cidade')['Nota_Media'].min()
 
+quant_alunos_por_cidade = data_frame.groupby('cidade')['nome'].count()
+
 # Histogramas das notas
 colunas_notas = ["nota_matematica", "nota_portugues", "nota_ciencias"]
 
