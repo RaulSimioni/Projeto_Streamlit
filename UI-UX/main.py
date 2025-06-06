@@ -29,3 +29,4 @@ vendas_mensais = df.groupby("ano_mes")["valor_total"].sum().reset_index()
 vendas_mensais.set_index("ano_mes", inplace=True)
 
 
+
